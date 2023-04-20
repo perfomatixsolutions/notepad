@@ -21,7 +21,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prepare": "husky install"
+    "lint": "eslint . --fix --max-warnings=0",
+    "prepare": "husky install",
+    "format": "prettier . --write"
   },
   "browserslist": {
     "production": [
@@ -42,6 +44,7 @@
     "prettier": "^2.8.7"
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write"
+    "*.js": "npm run lint",
+    "*.{js,css,md}": "npm run format"
   }
 }
