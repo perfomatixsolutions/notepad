@@ -29,7 +29,6 @@ const updateCache = (
 export default function Notepadinput() {
 	const [notes, setNotes] = useState('');
 	const [addTodo] = useMutation(ADD_Notepad, { update: updateCache });
-	const [removeTodoMutation] = useMutation(EDIT_NOTES);
 
 	const submitTask = () => {
 		addTodo({ variables: { notes } });
