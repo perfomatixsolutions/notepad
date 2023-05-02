@@ -4,10 +4,9 @@ export const GET_Notepad = gql`
 	query GetNotepad {
 		notepad {
 			notes
-			userName
+			username
 			id
-			createAt
-			completed
+			password
 		}
 	}
 `;
@@ -18,23 +17,31 @@ export const ADD_Notepad = gql`
 			affected_rows
 			returning {
 				notes
-				userName
+				username
 				id
-				createAt
-				completed
+				password
 			}
 		}
 	}
 `;
 
-export const edit_notes = gql`
-	query GetNotepad {
-		notepad_by_pk(id: 1) {
+export const Sign_Up = gql`
+	mutation InsertNotepad($username: String!, $password: String!) {
+		insert_notepad(objects: { username: $username, password: $password }) {
+			affected_rows
+			returning {
+				notes
+				username
+				id
+			}
+		}
+	}
+`;
+
+export const EDIT_NOTES = gql`
+	mutation ($id: Int!) {
+		edit_notepad_by_pk(id: $id) {
 			id
-			notes
-			userName
-			createAt
-			completed
 		}
 	}
 `;

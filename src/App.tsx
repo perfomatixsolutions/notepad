@@ -1,9 +1,11 @@
 import React from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Login from './component/Login/login';
 import Notepadinput from './component/notepad/notepadinput';
 import { hasuraScreet, hasuraURL } from './hasuraConstant';
+import SignUp from './component/Login/signup';
 
 const client = new ApolloClient({
 	uri: hasuraURL,
@@ -17,8 +19,13 @@ function App() {
 	return (
 		<ApolloProvider client={client}>
 			<div className="App">
-				<Login />
-				<Notepadinput />
+				<BrowserRouter>
+					<Routes>
+						<Route path="/" element={<Login />}></Route>
+						<Route path="home" element={<Notepadinput />} />
+						<Route path="signup" element={<SignUp />} />
+					</Routes>
+				</BrowserRouter>
 			</div>
 		</ApolloProvider>
 	);

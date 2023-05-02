@@ -5,13 +5,7 @@ import { LoginWrapper } from './loginStyle';
 import { Button, Grid, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { Stack } from '@mui/system';
-import {
-	ADD_Notepad,
-	EDIT_NOTES,
-	GET_Notepad,
-	Sign_Up,
-} from '../../graphql/queries';
-import Notepadinput from '../notepad/notepadinput';
+import { ADD_Notepad, GET_Notepad, Sign_Up } from '../../graphql/queries';
 
 const updateCache = (
 	cache: {
@@ -31,43 +25,21 @@ const updateCache = (
 		data: { notepad: [...existingNotepad.notepad, newNotepad] },
 	});
 };
-function Login() {
+function SignUp() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [Login] = useMutation(Sign_Up, { update: updateCache });
 	const navigate = useNavigate();
-	const { loading, error, data } = useQuery(GET_Notepad);
-
-	if (loading) {
-		return <div className="tasks">Loading...</div>;
-	}
-	if (error) {
-		return <div className="tasks">Error!</div>;
-	}
-
-	const userDate = data?.notepad;
-	const userNameData = data.notepad.map((item: any) => item.username);
 	const submitTask = () => {
-		const todos = userDate.filter(
-			(item: any) => item.username == username && item.password == password
-		);
-		console.log(todos, 'id');
-		if (todos.length === 0) {
-			alert('user name or password is wrong');
-		}
-		// type todos = {
-		// 	id: string;
-		// 	username: string;
-		// 	password: string;
-		// };
+		Login({ variables: { username, password } });
+		setPassword('');
+		setUsername('');
 
-		// <Notepadinput name={todos.username} id={todos.id} />;
 		try {
-			// Login({ variables: { username, password } });
+			Login({ variables: { username, password } });
 			setPassword('');
-			<Log name={todos.username} id={todos.id} />;
 			setUsername('');
-			navigate('/home');
+			navigate('/');
 		} catch (error) {
 			console.error('Something bad happened');
 			console.error(error);
@@ -80,7 +52,7 @@ function Login() {
 				<Grid item lg={6}>
 					<LoginWrapper>
 						<Stack direction="column" spacing={2}>
-							<Typography>Login</Typography>
+							<Typography>Sign Up here</Typography>
 
 							<TextField
 								id="outlined-multiline-flexible"
@@ -101,9 +73,8 @@ function Login() {
 								onChange={(e) => setPassword(e.target.value)}
 							/>
 							<Button variant="contained" onClick={submitTask}>
-								Login
+								Sign Up
 							</Button>
-							<Link to="/signup">sing up for new user</Link>
 						</Stack>
 					</LoginWrapper>
 				</Grid>
@@ -113,13 +84,4 @@ function Login() {
 	);
 }
 
-export default Login;
-
-function Log(props: any) {
-	console.log(props);
-	return (
-		<div>
-			<Notepadinput />
-		</div>
-	);
-}
+export default SignUp;
