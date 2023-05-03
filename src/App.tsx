@@ -22,7 +22,7 @@ function App() {
 				<BrowserRouter>
 					<Routes>
 						<Route path="/" element={<Login />}></Route>
-						<Route path="home" element={<Notepadinput />} />
+						{/* <Route path="home" element={<Notepadinput myArray={[]} />} /> */}
 						<Route path="signup" element={<SignUp />} />
 					</Routes>
 				</BrowserRouter>

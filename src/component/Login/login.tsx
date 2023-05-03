@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { LoginWrapper } from './loginStyle';
 import { Button, Grid, Typography } from '@mui/material';
@@ -31,12 +31,15 @@ const updateCache = (
 		data: { notepad: [...existingNotepad.notepad, newNotepad] },
 	});
 };
+
 function Login() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [Login] = useMutation(Sign_Up, { update: updateCache });
-	const navigate = useNavigate();
 	const { loading, error, data } = useQuery(GET_Notepad);
+	const [userdetails, setUserDetails] = useState([]);
+	const [userlogin, setUserlogin] = useState(false);
+	const [name, setName] = useState('');
 
 	if (loading) {
 		return <div className="tasks">Loading...</div>;
@@ -55,19 +58,14 @@ function Login() {
 		if (todos.length === 0) {
 			alert('user name or password is wrong');
 		}
-		// type todos = {
-		// 	id: string;
-		// 	username: string;
-		// 	password: string;
-		// };
 
-		// <Notepadinput name={todos.username} id={todos.id} />;
 		try {
-			// Login({ variables: { username, password } });
+			setUserDetails(todos);
+			setName(todos.map((item: { username: string }) => item.username));
+			console.log();
+			setUserlogin(true);
 			setPassword('');
-			<Log name={todos.username} id={todos.id} />;
 			setUsername('');
-			navigate('/home');
 		} catch (error) {
 			console.error('Something bad happened');
 			console.error(error);
@@ -75,51 +73,50 @@ function Login() {
 	};
 	return (
 		<div>
-			<Grid container>
-				<Grid item lg={3}></Grid>
-				<Grid item lg={6}>
-					<LoginWrapper>
-						<Stack direction="column" spacing={2}>
-							<Typography>Login</Typography>
+			{userlogin === false ? (
+				<Grid container>
+					<Grid item lg={3}></Grid>
+					<Grid item lg={6}>
+						<LoginWrapper>
+							<Stack direction="column" spacing={2}>
+								<Typography>Login</Typography>
 
-							<TextField
-								id="outlined-multiline-flexible"
-								label="username"
-								multiline
-								rows={1}
-								fullWidth
-								value={username}
-								onChange={(e) => setUsername(e.target.value)}
-							/>
-							<TextField
-								id="outlined-multiline-flexible"
-								label="Password"
-								multiline
-								rows={1}
-								fullWidth
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-							/>
-							<Button variant="contained" onClick={submitTask}>
-								Login
-							</Button>
-							<Link to="/signup">sing up for new user</Link>
-						</Stack>
-					</LoginWrapper>
+								<TextField
+									id="outlined-multiline-flexible"
+									label="username"
+									multiline
+									rows={1}
+									fullWidth
+									value={username}
+									onChange={(e) => setUsername(e.target.value)}
+								/>
+								<TextField
+									id="outlined-multiline-flexible"
+									label="Password"
+									multiline
+									rows={1}
+									fullWidth
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+								/>
+								<Button variant="contained" onClick={submitTask}>
+									Login
+								</Button>
+								<Link to="/signup">sing up for new user</Link>
+							</Stack>
+						</LoginWrapper>
+					</Grid>
+					<Grid item lg={3}></Grid>
 				</Grid>
-				<Grid item lg={3}></Grid>
-			</Grid>
+			) : (
+				<Notepadinput
+					name={name}
+					// id={userdetails.id}
+					// notepad={userdetails.notes}
+				/>
+			)}
 		</div>
 	);
 }
 
 export default Login;
-
-function Log(props: any) {
-	console.log(props);
-	return (
-		<div>
-			<Notepadinput />
-		</div>
-	);
-}

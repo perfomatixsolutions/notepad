@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Typography, Grid } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { Stack } from '@mui/system';
 
-import { GET_Notepad, ADD_Notepad, EDIT_NOTES } from '../../graphql/queries';
+import { GET_Notepad, ADD_Notepad } from '../../graphql/queries';
 
 const updateCache = (
 	cache: {
@@ -25,8 +25,13 @@ const updateCache = (
 		data: { notepad: [...existingNotepad.notepad, newNotepad] },
 	});
 };
-
-export default function Notepadinput() {
+interface Props {
+	name: string;
+	// id: number;
+	// notepad: string;
+}
+const Notepadinput: React.FC<Props> = ({ name }) => {
+	console.log(name);
 	const [notes, setNotes] = useState('');
 	const [addTodo] = useMutation(ADD_Notepad, { update: updateCache });
 
@@ -51,7 +56,7 @@ export default function Notepadinput() {
 				<Grid item lg={3}></Grid>
 				<Grid item lg={7}>
 					<Stack direction="column" spacing={2}>
-						<Typography>notes</Typography>
+						<Typography>Hi,{name} write you notes here</Typography>
 						<TextField
 							placeholder="Add a new task"
 							id="outlined-multiline-flexible"
@@ -68,13 +73,14 @@ export default function Notepadinput() {
 						<button onClick={submitTask}>added</button>
 					</Stack>
 				</Grid>
+
 				<Grid item lg={2}>
 					<Button variant="contained">
 						<Link to="/">logout</Link>
 					</Button>
 				</Grid>
 
-				<div>
+				{/* <div>
 					<div className="tasks">
 						<h3>
 							{data.notepad.map((item: any) => (
@@ -84,8 +90,9 @@ export default function Notepadinput() {
 							))}
 						</h3>
 					</div>
-				</div>
+				</div> */}
 			</Grid>
 		</div>
 	);
-}
+};
+export default Notepadinput;
