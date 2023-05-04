@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Button, Typography, Grid } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { Stack } from '@mui/system';
 
 import { GET_Notepad, ADD_Notepad } from '../../graphql/queries';
+import Login from '../Login/login';
 
 const updateCache = (
 	cache: {
@@ -27,71 +27,55 @@ const updateCache = (
 };
 interface Props {
 	name: string;
-	// id: number;
-	// notepad: string;
+	userId: string;
+	notepad: string;
 }
-const Notepadinput: React.FC<Props> = ({ name }) => {
+const Notepadinput: React.FC<Props> = ({ name, userId, notepad }) => {
 	console.log(name);
-	const [notes, setNotes] = useState('');
+	const [newnotes, setNewNotes] = useState(notepad);
 	const [addTodo] = useMutation(ADD_Notepad, { update: updateCache });
+	const [logout, setLogout] = useState(false);
 
 	const submitTask = () => {
-		addTodo({ variables: { notes } });
-		setNotes('');
+		const notes = newnotes.toString();
+		console.log(newnotes);
+		const id = userId.toString();
+
+		addTodo({ variables: { notes, id } });
 	};
-
-	const { loading, error, data } = useQuery(GET_Notepad);
-
-	if (loading) {
-		return <div className="tasks">Loading...</div>;
-	}
-	if (error) {
-		return <div className="tasks">Error!</div>;
-	}
-
-	console.log(data.notepad);
 	return (
 		<div>
-			<Grid container>
-				<Grid item lg={3}></Grid>
-				<Grid item lg={7}>
-					<Stack direction="column" spacing={2}>
-						<Typography>Hi,{name} write you notes here</Typography>
-						<TextField
-							placeholder="Add a new task"
-							id="outlined-multiline-flexible"
-							label="notes"
-							value={notes}
-							multiline
-							rows={5}
-							fullWidth
-							onChange={(e) => setNotes(e.target.value)}
-							onKeyPress={(e) => {
-								if (e.key === 'Enter') submitTask();
-							}}
-						/>
-						<button onClick={submitTask}>added</button>
-					</Stack>
-				</Grid>
+			{logout === true ? (
+				<Login />
+			) : (
+				<Grid container>
+					<Grid item lg={3}></Grid>
+					<Grid item lg={7}>
+						<Stack direction="column" spacing={2}>
+							<Typography>Hi,{name} write you notes here</Typography>
+							<TextField
+								id="outlined-helperText"
+								value={newnotes}
+								multiline
+								rows={5}
+								fullWidth
+								onChange={(e) => setNewNotes(e.target.value)}
+								onKeyPress={(e) => {
+									if (e.key === 'Enter') submitTask();
+								}}
+							/>
 
-				<Grid item lg={2}>
-					<Button variant="contained">
-						<Link to="/">logout</Link>
-					</Button>
-				</Grid>
+							<button onClick={submitTask}>added</button>
+						</Stack>
+					</Grid>
 
-				{/* <div>
-					<div className="tasks">
-						<h3>
-							{data.notepad.map((item: any) => (
-								<h6 key={item.id}>
-									{item.notes} <Button>edit</Button>
-								</h6>
-							))}
-						</h3>
-					</div>
-				</div> */}
-			</Grid>
+					<Grid item lg={2}>
+						<Button variant="contained" onClick={() => setLogout(true)}>
+							logout
+						</Button>
+					</Grid>
+				</Grid>
+			)}
 		</div>
 	);
 };

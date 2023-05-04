@@ -3,7 +3,6 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Login from './component/Login/login';
-import Notepadinput from './component/notepad/notepadinput';
 import { hasuraScreet, hasuraURL } from './hasuraConstant';
 import SignUp from './component/Login/signup';
 
@@ -22,7 +21,6 @@ function App() {
 				<BrowserRouter>
 					<Routes>
 						<Route path="/" element={<Login />}></Route>
-						{/* <Route path="home" element={<Notepadinput myArray={[]} />} /> */}
 						<Route path="signup" element={<SignUp />} />
 					</Routes>
 				</BrowserRouter>

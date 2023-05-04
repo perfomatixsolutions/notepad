@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { LoginWrapper } from './loginStyle';
 import { Button, Grid, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { Stack } from '@mui/system';
-import { ADD_Notepad, GET_Notepad, Sign_Up } from '../../graphql/queries';
+import { GET_Notepad, Sign_Up } from '../../graphql/queries';
 
 const updateCache = (
 	cache: {

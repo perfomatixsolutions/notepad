@@ -1,45 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { LoginWrapper } from './loginStyle';
 import { Button, Grid, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { Stack } from '@mui/system';
-import {
-	ADD_Notepad,
-	EDIT_NOTES,
-	GET_Notepad,
-	Sign_Up,
-} from '../../graphql/queries';
+import { GET_Notepad } from '../../graphql/queries';
 import Notepadinput from '../notepad/notepadinput';
-
-const updateCache = (
-	cache: {
-		readQuery: (arg0: { query: any }) => any;
-		writeQuery: (arg0: { query: any; data: { notepad: any[] } }) => void;
-	},
-	{ data }: any
-) => {
-	const existingNotepad = cache.readQuery({
-		query: GET_Notepad,
-	});
-
-	const newNotepad = data.insert_notepad;
-	console.log(existingNotepad);
-	cache.writeQuery({
-		query: GET_Notepad,
-		data: { notepad: [...existingNotepad.notepad, newNotepad] },
-	});
-};
 
 function Login() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [Login] = useMutation(Sign_Up, { update: updateCache });
 	const { loading, error, data } = useQuery(GET_Notepad);
-	const [userdetails, setUserDetails] = useState([]);
 	const [userlogin, setUserlogin] = useState(false);
 	const [name, setName] = useState('');
+	const [id, setId] = useState('');
+	const [notes, setNotes] = useState('');
 
 	if (loading) {
 		return <div className="tasks">Loading...</div>;
@@ -49,7 +26,6 @@ function Login() {
 	}
 
 	const userDate = data?.notepad;
-	const userNameData = data.notepad.map((item: any) => item.username);
 	const submitTask = () => {
 		const todos = userDate.filter(
 			(item: any) => item.username == username && item.password == password
@@ -60,8 +36,9 @@ function Login() {
 		}
 
 		try {
-			setUserDetails(todos);
 			setName(todos.map((item: { username: string }) => item.username));
+			setId(todos.map((item: { id: number }) => item.id));
+			setNotes(todos.map((item: { notes: string }) => item.notes));
 			console.log();
 			setUserlogin(true);
 			setPassword('');
@@ -109,11 +86,7 @@ function Login() {
 					<Grid item lg={3}></Grid>
 				</Grid>
 			) : (
-				<Notepadinput
-					name={name}
-					// id={userdetails.id}
-					// notepad={userdetails.notes}
-				/>
+				<Notepadinput name={name} userId={id} notepad={notes} />
 			)}
 		</div>
 	);

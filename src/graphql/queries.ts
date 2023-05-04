@@ -12,15 +12,9 @@ export const GET_Notepad = gql`
 `;
 
 export const ADD_Notepad = gql`
-	mutation InsertNotepad($notes: String!) {
-		insert_notepad(objects: { notes: $notes }) {
+	mutation UpdateQuery($notes: String!, $id: Int!) {
+		update_notepad(_set: { notes: $notes }, where: { id: { _eq: $id } }) {
 			affected_rows
-			returning {
-				notes
-				username
-				id
-				password
-			}
 		}
 	}
 `;
