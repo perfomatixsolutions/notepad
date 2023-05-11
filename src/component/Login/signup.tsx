@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { LoginWrapper } from './loginStyle';
 import { Button, Grid, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
@@ -20,7 +21,7 @@ const updateCache = (
 	});
 
 	const newNotepad = data.insert_notepad;
-	console.log(existingNotepad);
+
 	cache.writeQuery({
 		query: GET_Notepad,
 		data: { notepad: [...existingNotepad.notepad, newNotepad] },
@@ -30,17 +31,21 @@ function SignUp() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [Login] = useMutation(Sign_Up, { update: updateCache });
+	const { data } = useQuery(GET_Notepad);
 	const navigate = useNavigate();
 	const submitTask = () => {
-		Login({ variables: { username, password } });
-		setPassword('');
-		setUsername('');
-
+		const userDate = data?.notepad;
 		try {
-			Login({ variables: { username, password } });
-			setPassword('');
-			setUsername('');
-			navigate('/');
+			const todos = userDate.filter((item: any) => item.username == username);
+			if (todos.length > 0) {
+				alert('user name ia alrady their');
+			} else {
+				Login({ variables: { username, password } });
+				setPassword('');
+				setUsername('');
+				alert('user created successfully');
+				navigate('/');
+			}
 		} catch (error) {
 			console.error('Something bad happened');
 			console.error(error);

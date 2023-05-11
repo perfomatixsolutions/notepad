@@ -30,17 +30,15 @@ function Login() {
 		const todos = userDate.filter(
 			(item: any) => item.username == username && item.password == password
 		);
-		console.log(todos, 'id');
-		if (todos.length === 0) {
-			alert('user name or password is wrong');
-		}
-
 		try {
 			setName(todos.map((item: { username: string }) => item.username));
 			setId(todos.map((item: { id: number }) => item.id));
 			setNotes(todos.map((item: { notes: string }) => item.notes));
-			console.log();
-			setUserlogin(true);
+			if (todos.length === 0) {
+				alert('user name or password is wrong');
+			} else {
+				setUserlogin(true);
+			}
 			setPassword('');
 			setUsername('');
 		} catch (error) {
@@ -48,6 +46,7 @@ function Login() {
 			console.error(error);
 		}
 	};
+
 	return (
 		<div>
 			{userlogin === false ? (
